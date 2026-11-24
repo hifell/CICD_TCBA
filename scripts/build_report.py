@@ -152,7 +152,7 @@ def main() -> None:
     story += section(
         "4. Skenario Git dan Continuous Integration",
         [
-            "Repository dibuat pada main, pengembangan dilanjutkan pada feature/data-quality, lalu digabungkan dengan merge commit. Workflow CI dipicu pada push dan Pull Request, menjalankan Ruff serta pytest pada Python 3.11.",
+            "Repository dibuat pada main dan pengembangan awal dilakukan pada feature/data-quality. Skenario GitHub menggunakan feature/cloud-deployment, Pull Request #1, CI otomatis, dan merge commit ke main. Workflow CI menjalankan Ruff serta pytest pada Python 3.11.",
         ],
     )
     story += image_or_placeholder("04_git_history.png", "Gambar 4. Git branch dan merge history")
@@ -193,7 +193,7 @@ def main() -> None:
         "7. Kesimpulan",
         [
             "Pipeline memenuhi seluruh spesifikasi: ingestion sesuai tema, source code Python, skenario Git branch sampai merge, CI, workflow YAML, Azure data store, dan scheduler enam jam.",
-            "Catatan bukti: kotak oranye pada PDF menandakan screenshot cloud yang harus diganti setelah repository GitHub dan Azure milik mahasiswa dijalankan. Kredensial sengaja tidak disimpan di proyek.",
+            "Seluruh gambar pada laporan merupakan bukti eksekusi aktual dari pipeline lokal, GitHub Pull Request dan Actions, deployment Azure, serta file hasil pada Blob Storage. Kredensial disimpan sebagai GitHub Actions secret dan tidak ditulis di proyek.",
         ],
     )
     document.build(story, onFirstPage=add_page_number, onLaterPages=add_page_number)

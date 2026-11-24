@@ -16,14 +16,14 @@ resource Azure di-deploy.
 - [x] `07_azure_bicep.png` - Infrastructure as Code Azure
 - [x] `08_processed_summary.png` - ringkasan hasil data
 
-## Bukti GitHub dan Azure (ambil manual)
+## Bukti GitHub dan Azure (selesai)
 
-- [ ] `09_github_repository.png` - halaman repository dan branch `main`
-- [ ] `10_pull_request.png` - Pull Request `feature/data-quality` ke `main`
-- [ ] `11_ci_success.png` - halaman Actions, job CI hijau
-- [ ] `12_scheduler_success.png` - scheduled/manual workflow berhasil
-- [ ] `13_azure_resources.png` - resource group dan Storage Account
-- [ ] `14_azure_blob_results.png` - container `housing-results`, folder `runs/` dan `latest/`
+- [x] `09_github_repository.png` - repository `hifell/CICD_TCBA`
+- [x] `10_pull_request.png` - Pull Request `feature/cloud-deployment` ke `main`
+- [x] `11_ci_success.png` - GitHub Actions CI berhasil
+- [x] `12_scheduler_success.png` - manual workflow scheduler berhasil
+- [x] `13_azure_resources.png` - resource group dan Storage Account
+- [x] `14_azure_blob_results.png` - container `housing-results`, folder `runs/` dan `latest/`
 
 ## Skenario GitHub yang harus dilakukan
 

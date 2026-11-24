@@ -48,9 +48,9 @@ menjalankan pytest, dan menyimpan JUnit XML sebagai artifact.
 
 ## 6. Git branch dan merge
 
-Repository dimulai pada branch `main`. Pengembangan workflow, Azure Bicep, dan
-peningkatan kualitas dibuat pada `feature/data-quality`, kemudian digabungkan ke
-`main` memakai merge commit. `git log --graph --all` menjadi bukti riwayatnya.
+Repository dimulai pada branch `main`. Pengembangan awal dibuat pada
+`feature/data-quality`. Skenario GitHub dilakukan melalui Pull Request #1 dari
+`feature/cloud-deployment`, diperiksa oleh CI, kemudian di-merge ke `main`.
 
 ## 7. Scheduler dan CD
 

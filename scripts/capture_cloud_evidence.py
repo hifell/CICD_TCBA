@@ -4,25 +4,31 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 from pathlib import Path
 
 from capture_evidence import ROOT, save_evidence
 
 GH = Path("C:/Program Files/GitHub CLI/gh.exe")
+AZ = Path("C:/Program Files/Microsoft SDKs/Azure/CLI2/wbin/az.cmd")
 
 
-def execute(command: list[str]) -> tuple[int, str]:
+def execute(command: list[str], env: dict[str, str] | None = None) -> tuple[int, str]:
     result = subprocess.run(
         command,
         cwd=ROOT,
+        env=env,
         text=True,
+        encoding="utf-8",
+        errors="replace",
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         check=False,
     )
     label = "PS> " + " ".join(command)
-    return result.returncode, f"{label}\n\n{result.stdout}\nExit code: {result.returncode}"
+    clean_output = result.stdout.replace("✓", "SUCCESS").replace("·", "-")
+    return result.returncode, f"{label}\n\n{clean_output}\nExit code: {result.returncode}"
 
 
 def capture_github() -> None:
@@ -64,6 +70,8 @@ def capture_github() -> None:
         ],
         cwd=ROOT,
         text=True,
+        encoding="utf-8",
+        errors="replace",
         stdout=subprocess.PIPE,
         check=True,
     )
@@ -93,6 +101,8 @@ def capture_scheduler() -> None:
         ],
         cwd=ROOT,
         text=True,
+        encoding="utf-8",
+        errors="replace",
         stdout=subprocess.PIPE,
         check=True,
     )
@@ -110,11 +120,13 @@ def capture_scheduler() -> None:
 
 def capture_azure() -> None:
     resource_command = [
-        "az",
+        str(AZ),
         "resource",
         "list",
         "--resource-group",
         "rg-housing-cicd-l0224038",
+        "--subscription",
+        "8cc2acee-5069-4ca5-a421-3f777acefaba",
         "--query",
         "[].{name:name,type:type,location:location}",
         "-o",
@@ -125,23 +137,45 @@ def capture_azure() -> None:
         raise RuntimeError(output)
     save_evidence(13, "azure_resources", "Azure Resources", output)
 
+    connection = subprocess.run(
+        [
+            str(AZ),
+            "storage",
+            "account",
+            "show-connection-string",
+            "--subscription",
+            "8cc2acee-5069-4ca5-a421-3f777acefaba",
+            "--resource-group",
+            "rg-housing-cicd-l0224038",
+            "--name",
+            "sthousingl0224038",
+            "--query",
+            "connectionString",
+            "-o",
+            "tsv",
+        ],
+        cwd=ROOT,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        stdout=subprocess.PIPE,
+        check=True,
+    ).stdout.strip()
+    azure_env = os.environ.copy()
+    azure_env["AZURE_STORAGE_CONNECTION_STRING"] = connection
     blob_command = [
-        "az",
+        str(AZ),
         "storage",
         "blob",
         "list",
-        "--account-name",
-        "sthousingl0224038",
         "--container-name",
         "housing-results",
-        "--auth-mode",
-        "login",
         "--query",
         "[].{name:name,size:properties.contentLength,tier:properties.blobTier}",
         "-o",
         "table",
     ]
-    code, output = execute(blob_command)
+    code, output = execute(blob_command, env=azure_env)
     if code:
         raise RuntimeError(output)
     save_evidence(14, "azure_blob_results", "Azure Blob Pipeline Results", output)
