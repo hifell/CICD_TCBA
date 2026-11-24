@@ -1,0 +1,63 @@
+name: Scheduled Housing Ingestion
+
+on:
+  schedule:
+    # UTC: 00:00, 06:00, 12:00, dan 18:00 setiap hari.
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: housing-ingestion-production
+  cancel-in-progress: false
+
+jobs:
+  ingest-and-load:
+    name: Ingest Excel and load Azure Blob
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Install pipeline
+        run: python -m pip install -e .
+
+      - name: Validate Azure secret
+        shell: bash
+        env:
+          AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+        run: |
+          if [ -z "$AZURE_STORAGE_CONNECTION_STRING" ]; then
+            echo "::error::Configure AZURE_STORAGE_CONNECTION_STRING in repository secrets"
+            exit 1
+          fi
+
+      - name: Run ingestion and upload results
+        env:
+          AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+        run: >-
+          python -m housing_pipeline.ingest
+          --input sup-001_data-supply-perumahan.xlsx
+          --output data/processed
+          --upload-azure
+          --container housing-results
+
+      - name: Upload processed data as workflow evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: housing-results-${{ github.run_number }}
+          path: data/processed/
+          if-no-files-found: warn
+          retention-days: 7
