@@ -7,7 +7,7 @@ Konfigurasi deployment untuk tugas CI/CD:
 | GitHub repository | `hifell/CICD_TCBA` |
 | Azure subscription | `Azure for Students` |
 | Resource group | `rg-housing-cicd-l0224038` |
-| Region | `southeastasia` |
+| Region | `indonesiacentral` |
 | Storage account | `sthousingl0224038` |
 | Blob container | `housing-results` |
 | Scheduler | `0 */6 * * *` |

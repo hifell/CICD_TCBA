@@ -13,7 +13,7 @@ on:
       location:
         description: Azure region
         required: true
-        default: southeastasia
+        default: indonesiacentral
 
 permissions:
   contents: read

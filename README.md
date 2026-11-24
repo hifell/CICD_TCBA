@@ -51,7 +51,7 @@ Hasil pipeline:
    az deployment group create \
      --resource-group rg-housing-cicd \
      --template-file infra/main.bicep \
-     --parameters storageAccountName=<nama-unik-storage>
+     --parameters storageAccountName=<nama-unik-storage> location=indonesiacentral
    ```
 
 3. Ambil connection string Storage Account dan simpan sebagai GitHub Actions
