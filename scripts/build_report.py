@@ -13,6 +13,7 @@ from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import cm
 from reportlab.platypus import (
     Image,
+    KeepTogether,
     PageBreak,
     Paragraph,
     SimpleDocTemplate,
@@ -53,7 +54,7 @@ def image_or_placeholder(filename: str, caption: str):
             )
         )
         elements.append(placeholder)
-    return elements
+    return [KeepTogether(elements)]
 
 
 def add_page_number(canvas, document) -> None:
@@ -158,9 +159,11 @@ def main() -> None:
     story += [PageBreak()]
     story += image_or_placeholder("05_ci_workflow.png", "Gambar 5. Definisi workflow CI")
     story += [PageBreak()]
-    story += image_or_placeholder("10_pull_request.png", "Gambar 6. Pull Request feature ke main")
+    story += image_or_placeholder("09_github_repository.png", "Gambar 6. Repository GitHub")
     story += [PageBreak()]
-    story += image_or_placeholder("11_ci_success.png", "Gambar 7. GitHub Actions CI berhasil")
+    story += image_or_placeholder("10_pull_request.png", "Gambar 7. Pull Request feature ke main")
+    story += [PageBreak()]
+    story += image_or_placeholder("11_ci_success.png", "Gambar 8. GitHub Actions CI berhasil")
     story += [PageBreak()]
     story += section(
         "5. Scheduler Setiap Enam Jam",
@@ -168,9 +171,9 @@ def main() -> None:
             "Workflow scheduled-ingestion.yaml memakai cron 0 */6 * * *. Job memvalidasi secret, menjalankan pipeline penuh, mengunggah hasil ke Azure, dan menyimpan artifact sementara untuk audit.",
         ],
     )
-    story += image_or_placeholder("06_scheduler_workflow.png", "Gambar 8. Workflow scheduler")
+    story += image_or_placeholder("06_scheduler_workflow.png", "Gambar 9. Workflow scheduler")
     story += [PageBreak()]
-    story += image_or_placeholder("12_scheduler_success.png", "Gambar 9. Scheduled workflow berhasil")
+    story += image_or_placeholder("12_scheduler_success.png", "Gambar 10. Scheduled workflow berhasil")
     story += [PageBreak()]
     story += section(
         "6. Azure Data Store",
@@ -178,13 +181,13 @@ def main() -> None:
             "Bicep membuat StorageV2 Standard LRS dan private container housing-results. Public access dinonaktifkan, TLS 1.2 dan HTTPS diwajibkan, serta soft delete tujuh hari diaktifkan. File run disimpan immutable pada runs/YYYY/MM/DD/HHMMSS dan latest menunjuk hasil terbaru.",
         ],
     )
-    story += image_or_placeholder("07_azure_bicep.png", "Gambar 10. Azure Infrastructure as Code")
+    story += image_or_placeholder("07_azure_bicep.png", "Gambar 11. Azure Infrastructure as Code")
     story += [PageBreak()]
-    story += image_or_placeholder("13_azure_resources.png", "Gambar 11. Azure Resource Group dan Storage Account")
+    story += image_or_placeholder("13_azure_resources.png", "Gambar 12. Azure Resource Group dan Storage Account")
     story += [PageBreak()]
-    story += image_or_placeholder("14_azure_blob_results.png", "Gambar 12. Hasil pipeline pada Blob Container")
+    story += image_or_placeholder("14_azure_blob_results.png", "Gambar 13. Hasil pipeline pada Blob Container")
     story += [PageBreak()]
-    story += image_or_placeholder("08_processed_summary.png", "Gambar 13. Ringkasan output pipeline")
+    story += image_or_placeholder("08_processed_summary.png", "Gambar 14. Ringkasan output pipeline")
     story += [PageBreak()]
     story += section(
         "7. Kesimpulan",
