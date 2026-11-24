@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "housing-supply-pipeline"
+version = "1.0.0"
+description = "CI/CD ingestion pipeline for Indonesian housing supply data"
+requires-python = ">=3.11"
+dependencies = [
+  "pandas==2.3.3",
+  "openpyxl==3.1.5",
+  "azure-storage-blob==12.27.1",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
